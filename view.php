@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * superframe view page
+ * Superframe view page
  *
  * @package    block_superframe
  * @copyright  Daniel Neis <danielneis@gmail.com>
  * Modified for use in MoodleBites for Developers Level 1 by Richard Jones & Justin Hunt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require('../../config.php');
 $blockid = required_param('blockid', PARAM_INT);
 $def_config = get_config('block_superframe');
@@ -32,6 +31,10 @@ $PAGE->set_pagelayout($def_config->pagelayout);
 $PAGE->set_title(get_string('pluginname', 'block_superframe'));
 $PAGE->navbar->add(get_string('pluginname', 'block_superframe'));
 require_login();
+
+// Check the users permissions to see the view page.
+$context = context_course::instance($COURSE->id);
+require_capability('block/superframe:seeviewpage', $context);
 
 // Start output to browser.
 echo $OUTPUT->header();
@@ -50,8 +53,10 @@ if ($configdata) {
    $config = $def_config;
    $config->size = 'custom';
 }
+
 // URL - comes either from instance or admin.
 $url = $config->url;
+
 // Let's set up the iframe attributes.
 switch ($config->size) {
     case 'custom':
@@ -72,19 +77,12 @@ switch ($config->size) {
         break;
 }
 
-echo '<br>' . fullname($USER) . '<br>';
-
-                // Build and display an iframe.
-        $url = 'https://quizlet.com/132695231/scatter/embed';
-        $width = '600px';
-        $height = '400px';
-        
-        // Build and display an iframe.
-        $attributes = ['src' => $url,
+// Build and display an iframe.
+$attributes = ['src' => $url,
                'width' => $width,
                'height' => $height];
-        echo html_writer::start_tag('iframe', $attributes);
-        echo html_writer::end_tag('iframe');
-        
-//send footer out to browser
+echo html_writer::start_tag('iframe', $attributes);
+echo html_writer::end_tag('iframe');
+
+// Send footer out to browser.
 echo $OUTPUT->footer();
