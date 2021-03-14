@@ -59,3 +59,4 @@ $string['custom'] = 'Custom';
 $string['small'] = 'Small';
 $string['medium'] = 'Medium';
 $string['large'] = 'Large';
+
